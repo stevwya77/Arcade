@@ -1,0 +1,55 @@
+# Build output
+Build/
+build/
+out/
+cmake-build-*/
+.cache/
+
+# Generated compile database
+compile_commands.json
+
+# In-tree / accidental CMake leftovers
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+Testing/
+_deps/
+Makefile
+
+# Compiled objects and libraries
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+
+# Prefixed debug/release artifacts
+*.pdb
+*.ilk
+*.idb
+*.exp
+
+# IDE / editor
+.vs/
+.idea/
+*.user
+*.user.*
+*.suo
+*.VC.db
+*.VC.opendb
+*.swp
+*~
+*.code-workspace
+
+# OS junk
+.DS_Store
+Thumbs.db
+Desktop.ini
