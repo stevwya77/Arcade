@@ -10,6 +10,10 @@ private:
     sf::RenderWindow window_;
     
     void EventWindowClose();
+    void EventWindowResized(sf::Vector2u size);
+    void EventWindowFocusLost();
+    void EventWindowFocusGained();
+
 public:
     Engine();
 
