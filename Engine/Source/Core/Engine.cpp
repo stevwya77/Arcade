@@ -17,6 +17,7 @@ Engine::Engine() :
     }
 
     LOG_INFO("Window created");
+
 }
 
 bool Engine::IsRunning() const
@@ -34,7 +35,7 @@ void Engine::ProcessEvents()
 
 void Engine::Update()
 {
-
+    context_.time.Update();
 }
 
 void Engine::Render()
