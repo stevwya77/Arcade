@@ -16,6 +16,8 @@ Engine::Engine() :
         sf::err().rdbuf(nullptr);
     }
 
+    context_.audio.SetGlobalVolume(gConfig.globalVolume);
+
     LOG_INFO("Window created");
 
 }
