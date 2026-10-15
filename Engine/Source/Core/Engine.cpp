@@ -1,12 +1,14 @@
 #include "Core/Engine.h"
 #include "Core/EngineConfig.h"
+#include "SFML/Graphics/Sprite.hpp"
 #include "SFML/System/Err.hpp"
 #include "SFML/System/Vector2.hpp"
 #include "Utils/Log.h"
 
 
 Engine::Engine() :
-    window_(sf::VideoMode(sf::Vector2u(gConfig.windowSize)), gConfig.windowTitle)
+    window_(sf::VideoMode(sf::Vector2u(gConfig.windowSize)), gConfig.windowTitle),
+    context_(window_)
 {
     window_.setIcon(sf::Image("Content/Textures/Icon.png"));
     window_.setMinimumSize(window_.getSize() / 2u);
@@ -44,6 +46,8 @@ void Engine::Update()
 void Engine::Render()
 {
     window_.clear();
+    context_.renderer.BeginDrawing();
+    window_.draw(sf::Sprite(context_.renderer.FinishDrawing()));
     window_.display();
 }
 
@@ -66,6 +70,11 @@ void Engine::EventWindowFocusLost()
 void Engine::EventWindowFocusGained()
 {
     LOG_INFO("Window focus gained");
+}
+
+void Engine::EventWindowScreenshot() const
+{
+    context_.screenshot.Take();
 }
 
 void Engine::EventGamepadConnected(int id)
