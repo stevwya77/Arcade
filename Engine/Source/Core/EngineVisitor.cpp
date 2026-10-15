@@ -2,6 +2,8 @@
 
 #include "Core/Engine.h"
 #include "SFML/Window/Event.hpp"
+#include "SFML/Window/Keyboard.hpp"
+#include "Utils/InputBindings.h"
 
 void EngineVisitor::operator()(const sf::Event::Closed&)
 {
@@ -38,5 +40,24 @@ void EngineVisitor::operator()(const sf::Event::KeyPressed& key)
     if (key.control && key.shift && key.scancode == sf::Keyboard::Scan::S)
     {
         engine.EventWindowScreenshot();
+    }
+    else if (key.scancode == sf::Keyboard::Scan::R)
+    {
+        engine.EventSceneRestart();
+    }
+    else if (key.scancode == sf::Keyboard::Scan::M)
+    {
+        engine.EventSceneMenuReturn();
+    }
+}
+
+void EngineVisitor::operator()(const sf::Event::JoystickButtonPressed& joystick)
+{
+    if (const auto button = Input::HardwareToLogical(joystick.button, joystick.joystickId))
+    {
+        if (*button == GamepadButton::Select)
+        {
+            engine.EventSceneMenuReturn();
+        }
     }
 }

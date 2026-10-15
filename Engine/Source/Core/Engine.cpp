@@ -13,6 +13,7 @@ Engine::Engine() :
     window_.setIcon(sf::Image("Content/Textures/Icon.png"));
     window_.setMinimumSize(window_.getSize() / 2u);
     window_.setKeyRepeatEnabled(false);
+    window_.setMouseCursorVisible(false);
     
     if (gConfig.disableSFMLLogs)
     {
@@ -32,22 +33,33 @@ bool Engine::IsRunning() const
 
 void Engine::ProcessEvents()
 {
+    if (const auto nextScene = context_.scenes.FetchNextScene())
+    {
+        EventSceneChange(*nextScene);
+    }
+
     while (const auto event = window_.pollEvent())
     {
         event->visit(EngineVisitor{*this});
+        context_.gui.ProcessEvent(*event);
     }
 }
 
 void Engine::Update()
 {
     context_.time.Update();
+    context_.cursor.Update(context_.time.GetDeltaTime());
 }
 
 void Engine::Render()
 {
     window_.clear();
+    
     context_.renderer.BeginDrawing();
     window_.draw(sf::Sprite(context_.renderer.FinishDrawing()));
+    
+    context_.gui.Render();
+    context_.cursor.Render();
     window_.display();
 }
 
@@ -85,4 +97,19 @@ void Engine::EventGamepadConnected(int id)
 void Engine::EventGamepadDisconnected(int id)
 {
     LOG_INFO("Gamepad {} disconnected", id);
+}
+
+void Engine::EventSceneChange(const std::string& name)
+{
+    // TODO: Scene Switching Logic
+}
+
+void Engine::EventSceneRestart()
+{
+    context_.scenes.RestartCurrentScene();
+}
+
+void Engine::EventSceneMenuReturn()
+{
+    context_.scenes.ChangeScene("Menu");
 }
