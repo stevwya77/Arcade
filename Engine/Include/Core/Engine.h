@@ -4,6 +4,8 @@
 #include <string>
 #include "Core/EngineContext.h"
 #include "Core/EngineVisitor.h"
+#include "Scene/SceneFactory.h"
+#include "Core/Overlay.h"
 
 class Engine
 {
@@ -12,7 +14,11 @@ private:
 
     sf::RenderWindow window_;
     EngineContext context_;
+    SceneFactory::Scenes scenes_;
+    Scene* currentScene_;
+    Overlay overlay_;
     
+    bool cursorWasVisible_;
     void EventWindowClose();
     void EventWindowResized(sf::Vector2u size);
     void EventWindowFocusLost();
@@ -23,6 +29,8 @@ private:
     void EventSceneChange(const std::string& name);
     void EventSceneRestart();
     void EventSceneMenuReturn();
+    void EventOverlayPauseToggle();
+    void EventOverlaySelect(OverlaySelection selection);
 
 public:
     Engine();
