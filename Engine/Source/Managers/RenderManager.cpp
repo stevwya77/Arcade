@@ -1,7 +1,10 @@
 #include "Managers/RenderManager.h"
 #include "Core/EngineConfig.h"
-#include "SFML/Graphics/Drawable.hpp"
-#include "SFML/Graphics/Texture.hpp"
+#include "Utils/Verify.h"
+#include "Graphics/Effects/EffectBloom.h"
+#include "Graphics/Effects/EffectMonitor.h"
+#include <memory>
+#include <utility>
 
 RenderManager::RenderManager() :
     target_(sf::Vector2u(gConfig.windowSize)),
@@ -11,6 +14,14 @@ RenderManager::RenderManager() :
     target_.setSmooth(true);
     background_.setTexture(&backgroundTexture_);
     background_.setFillColor(gConfig.backgroundColor);
+
+    if (sf::Shader::isAvailable())
+    {
+        VERIFY(effectsTarget_.resize(sf::Vector2u(gConfig.windowSize)));
+
+        effects_.emplace_back(std::make_unique<EffectBloom>());
+        effects_.emplace_back(std::make_unique<EffectMonitor>());
+    }
 }
 
 void RenderManager::Draw(const sf::Drawable& drawable)
@@ -37,5 +48,18 @@ void RenderManager::BeginDrawing()
 const sf::Texture& RenderManager::FinishDrawing()
 {
     target_.display();
-    return target_.getTexture();
+
+    sf::RenderTexture* input = &target_;
+    sf::RenderTexture* output = &effectsTarget_;
+
+    for (auto& effect : effects_)
+    {
+        output->clear();
+        effect->Apply(input->getTexture(), *output);
+        output->display();
+
+        std::swap(input, output);
+    }
+
+    return input->getTexture();
 }

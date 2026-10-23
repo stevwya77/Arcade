@@ -27,14 +27,18 @@ Engine::Engine() :
     }
 
     context_.audio.SetGlobalVolume(gConfig.globalVolume);
-
     LOG_INFO("Window created");
-
+    context_.scenes.ChangeScene("Bounce");
 }
 
 bool Engine::IsRunning() const
 {
     return window_.isOpen();
+}
+
+bool Engine::HasFocus() const
+{
+    return window_.hasFocus();
 }
 
 void Engine::ProcessEvents()
@@ -163,7 +167,7 @@ void Engine::EventOverlayPauseToggle()
     context_.cursor.SetVisible(overlayVisible || cursorWasVisible_);
     cursorWasVisible_ = cursorVisible;
 
-    //currentScene_->OnPause(overlayVisible);
+    currentScene_->OnPause(overlayVisible);
     LOG_INFO(overlayVisible ? "Game paused" : "Game resumed");
 }
 
